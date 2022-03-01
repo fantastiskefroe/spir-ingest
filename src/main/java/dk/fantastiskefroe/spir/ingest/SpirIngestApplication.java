@@ -1,4 +1,4 @@
-package dk.fantastiskefroe.spiringest;
+package dk.fantastiskefroe.spir.ingest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

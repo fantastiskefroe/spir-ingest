@@ -1,4 +1,4 @@
-package dk.fantastiskefroe.spiringest;
+package dk.fantastiskefroe.spir.ingest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
