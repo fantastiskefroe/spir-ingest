@@ -1,13 +1,16 @@
 package dk.fantastiskefroe.spir.ingest.controller;
 
-import dk.fantastiskefroe.spir.ingest.entity.Order;
+import dk.fantastiskefroe.spir.ingest.controller.dto.OrderDTO;
 import dk.fantastiskefroe.spir.ingest.service.OrderService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
+@Validated
 @RequestMapping
 public class ShopifyWebhookController {
     private final OrderService orderService;
@@ -16,8 +19,10 @@ public class ShopifyWebhookController {
         this.orderService = orderService;
     }
 
-    @PostMapping("/order-created")
-    public void createOrder(@RequestBody Order order) {
-        orderService.createOrder(order);
+    @PostMapping(value = "/order-created", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDTO createOrder(@Valid @RequestBody OrderDTO order) {
+        return order;
+//        orderService.createOrder(order);
     }
 }
