@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.Instant;
 import java.util.Arrays;
@@ -28,8 +29,8 @@ public class OrderDAO {
                 "AND valid_to IS NULL";
 
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("name", name)
-                .addValue("now", now);
+                .addValue("name", name, Types.VARCHAR)
+                .addValue("now", Timestamp.from(now), Types.TIMESTAMP);
 
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
@@ -40,24 +41,24 @@ public class OrderDAO {
                 "total_discount, subtotal_price, total_tax, total_price, total_shipping_price, " +
                 "created_date_time, valid_from) VALUES " +
                 "(:name, :number, :status, :cancelReason, :financialStatus, " +
-                ":total_discount, :subtotal_price, :total_tax, :total_price, :total_shipping_price, " +
-                ":created_date_time, :valid_from)";
+                ":totalDiscount, :subtotalPrice, :totalTax, :totalPrice, :totalShippingPrice, " +
+                ":createdDateTime, :validFrom)";
 
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("name", order.name())
-                .addValue("number", order.number())
-                .addValue("status", order.status())
-                .addValue("cancelReason", order.cancelReason())
-                .addValue("financialStatus", order.financialStatus())
+                .addValue("name", order.name(), Types.VARCHAR)
+                .addValue("number", order.number(), Types.INTEGER)
+                .addValue("status", order.status(), Types.VARCHAR)
+                .addValue("cancelReason", order.cancelReason(), Types.VARCHAR)
+                .addValue("financialStatus", order.financialStatus(), Types.VARCHAR)
 
-                .addValue("totalDiscount", order.totalDiscount())
-                .addValue("subtotalPrice", order.subtotalPrice())
-                .addValue("totalTax", order.totalTax())
-                .addValue("totalPrice", order.totalPrice())
-                .addValue("totalShippingPrice", order.totalShippingPrice())
+                .addValue("totalDiscount", order.totalDiscount(), Types.INTEGER)
+                .addValue("subtotalPrice", order.subtotalPrice(), Types.INTEGER)
+                .addValue("totalTax", order.totalTax(), Types.INTEGER)
+                .addValue("totalPrice", order.totalPrice(), Types.INTEGER)
+                .addValue("totalShippingPrice", order.totalShippingPrice(), Types.INTEGER)
 
-                .addValue("createdDateTime", order.createdDateTime(), Types.TIMESTAMP_WITH_TIMEZONE)
-                .addValue("validFrom", now, Types.TIMESTAMP_WITH_TIMEZONE);
+                .addValue("createdDateTime", Timestamp.from(order.createdDateTime()), Types.TIMESTAMP)
+                .addValue("validFrom", Timestamp.from(now), Types.TIMESTAMP);
 
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource, generatedKeyHolder, new String[] {"id"});
@@ -71,12 +72,12 @@ public class OrderDAO {
                 "(:orderID, :sku, :title, :variantTitle, :quantity, :price)";
 
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("orderID", orderID)
-                .addValue("sku", orderLine.sku())
-                .addValue("title", orderLine.title())
-                .addValue("variantTitle", orderLine.variantTitle())
-                .addValue("quantity", orderLine.quantity())
-                .addValue("price", orderLine.price());
+                .addValue("orderID", orderID, Types.BIGINT)
+                .addValue("sku", orderLine.sku(), Types.VARCHAR)
+                .addValue("title", orderLine.title(), Types.VARCHAR)
+                .addValue("variantTitle", orderLine.variantTitle(), Types.VARCHAR)
+                .addValue("quantity", orderLine.quantity(), Types.INTEGER)
+                .addValue("price", orderLine.price(), Types.INTEGER);
 
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
