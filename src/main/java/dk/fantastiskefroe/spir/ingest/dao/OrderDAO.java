@@ -1,12 +1,14 @@
 package dk.fantastiskefroe.spir.ingest.dao;
 
-import dk.fantastiskefroe.spir.ingest.entity.LineItem;
+import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Types;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -18,31 +20,64 @@ public class OrderDAO {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    private long createLineItem(Long orderID, LineItem lineItem) {
-        final String sql = "INSERT INTO line_items(id, order_id, product_id, variant_id) VALUES (:id, :order_id, :product_id, :variant_id);";
+    public void invalidateExistingOrderByName(String name, Instant now) {
+        final String sql = "UPDATE \"order\" " +
+                "SET valid_to = :now " +
+                "WHERE name = :name " +
+                "AND valid_from <= :now " +
+                "AND valid_to IS NULL";
+
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("id", lineItem.id())
-                .addValue("order_id", orderID)
-                .addValue("product_id", lineItem.product_id())
-                .addValue("variant_id", lineItem.variant_id());
+                .addValue("name", name)
+                .addValue("now", now);
+
+        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
+    }
+
+    public long createOrder(Order order, Instant now) {
+        final String sql = "INSERT INTO \"order\" " +
+                "(name, number, status, cancel_reason, financial_status, " +
+                "total_discount, subtotal_price, total_tax, total_price, total_shipping_price, " +
+                "created_date_time, valid_from) VALUES " +
+                "(:name, :number, :status, :cancelReason, :financialStatus, " +
+                ":total_discount, :subtotal_price, :total_tax, :total_price, :total_shipping_price, " +
+                ":created_date_time, :valid_from)";
+
+        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("name", order.name())
+                .addValue("number", order.number())
+                .addValue("status", order.status())
+                .addValue("cancelReason", order.cancelReason())
+                .addValue("financialStatus", order.financialStatus())
+
+                .addValue("totalDiscount", order.totalDiscount())
+                .addValue("subtotalPrice", order.subtotalPrice())
+                .addValue("totalTax", order.totalTax())
+                .addValue("totalPrice", order.totalPrice())
+                .addValue("totalShippingPrice", order.totalShippingPrice())
+
+                .addValue("createdDateTime", order.createdDateTime(), Types.TIMESTAMP_WITH_TIMEZONE)
+                .addValue("validFrom", now, Types.TIMESTAMP_WITH_TIMEZONE);
 
         final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource, generatedKeyHolder, new String[] {"id"});
+
         return Objects.requireNonNull(generatedKeyHolder.getKey()).longValue();
     }
 
-    public long createOrder(Order order) {
-        final String sql = "INSERT INTO orders(id, order_number) VALUES (:id, :order_number);";
+    public void createOrderLine(long orderID, OrderLine orderLine) {
+        final String sql = "INSERT INTO order_line " +
+                "(order_id, sku, title, variant_title, quantity, price) VALUES " +
+                "(:orderID, :sku, :title, :variantTitle, :quantity, :price)";
+
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
-                .addValue("id", order.id())
-                .addValue("order_number", order.order_number());
+                .addValue("orderID", orderID)
+                .addValue("sku", orderLine.sku())
+                .addValue("title", orderLine.title())
+                .addValue("variantTitle", orderLine.variantTitle())
+                .addValue("quantity", orderLine.quantity())
+                .addValue("price", orderLine.price());
 
-        final GeneratedKeyHolder generatedKeyHolder = new GeneratedKeyHolder();
-        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource, generatedKeyHolder, new String[] {"id"});
-
-        Arrays.stream(order.line_items()).map(line_item -> createLineItem(order.id(), line_item));
-
-        return Objects.requireNonNull(generatedKeyHolder.getKey()).longValue();
+        namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
 }

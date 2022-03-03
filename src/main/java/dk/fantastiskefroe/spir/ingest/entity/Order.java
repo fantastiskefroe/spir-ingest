@@ -33,4 +33,8 @@ public record Order(
         List<OrderLine> orderLines,
         @NonNull
         Instant createdDateTime) {
+
+    public Order withID(long orderID) {
+        return new Order(orderID, name, number, status, cancelReason, financialStatus, totalDiscount, subtotalPrice, totalTax, totalPrice, totalShippingPrice, orderLines, createdDateTime);
+    }
 }

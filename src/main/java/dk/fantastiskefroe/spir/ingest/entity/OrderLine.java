@@ -4,10 +4,6 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 public record OrderLine(
-        @Nullable
-        Long id,
-        @NonNull
-        long orderID,
         @NonNull
         String sku,
         @NonNull
