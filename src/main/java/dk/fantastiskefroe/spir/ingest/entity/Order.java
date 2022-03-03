@@ -4,6 +4,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.time.Instant;
+import java.util.List;
 
 public record Order(
         @Nullable
@@ -28,6 +29,8 @@ public record Order(
         Integer totalPrice,
         @Nullable
         Integer totalShippingPrice,
+        @NonNull
+        List<OrderLine> orderLines,
         @NonNull
         Instant createdDateTime) {
 }
