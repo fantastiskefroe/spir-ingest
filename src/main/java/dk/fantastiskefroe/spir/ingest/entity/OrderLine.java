@@ -13,5 +13,5 @@ public record OrderLine(
         @NonNull
         int quantity,
         @Nullable
-        int price) {
+        Double price) {
 }

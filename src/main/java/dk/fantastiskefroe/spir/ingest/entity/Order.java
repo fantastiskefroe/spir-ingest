@@ -20,15 +20,15 @@ public record Order(
         @NonNull
         FinancialStatus financialStatus,
         @Nullable
-        Integer totalDiscount,
+        Double totalDiscount,
         @Nullable
-        Integer subtotalPrice,
+        Double subtotalPrice,
         @Nullable
-        Integer totalTax,
+        Double totalTax,
         @Nullable
-        Integer totalPrice,
+        Double totalPrice,
         @Nullable
-        Integer totalShippingPrice,
+        Double totalShippingPrice,
         @NonNull
         List<OrderLine> orderLines,
         @NonNull
