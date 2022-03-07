@@ -51,11 +51,11 @@ public class OrderDAO {
                 .addValue("cancelReason", order.cancelReason(), Types.VARCHAR)
                 .addValue("financialStatus", order.financialStatus(), Types.VARCHAR)
 
-                .addValue("totalDiscount", order.totalDiscount(), Types.INTEGER)
-                .addValue("subtotalPrice", order.subtotalPrice(), Types.INTEGER)
-                .addValue("totalTax", order.totalTax(), Types.INTEGER)
-                .addValue("totalPrice", order.totalPrice(), Types.INTEGER)
-                .addValue("totalShippingPrice", order.totalShippingPrice(), Types.INTEGER)
+                .addValue("totalDiscount", order.totalDiscount(), Types.DOUBLE)
+                .addValue("subtotalPrice", order.subtotalPrice(), Types.DOUBLE)
+                .addValue("totalTax", order.totalTax(), Types.DOUBLE)
+                .addValue("totalPrice", order.totalPrice(), Types.DOUBLE)
+                .addValue("totalShippingPrice", order.totalShippingPrice(), Types.DOUBLE)
 
                 .addValue("createdDateTime", Timestamp.from(order.createdDateTime()), Types.TIMESTAMP)
                 .addValue("validFrom", Timestamp.from(now), Types.TIMESTAMP);
@@ -77,7 +77,7 @@ public class OrderDAO {
                 .addValue("title", orderLine.title(), Types.VARCHAR)
                 .addValue("variantTitle", orderLine.variantTitle(), Types.VARCHAR)
                 .addValue("quantity", orderLine.quantity(), Types.INTEGER)
-                .addValue("price", orderLine.price(), Types.INTEGER);
+                .addValue("price", orderLine.price(), Types.DOUBLE);
 
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
