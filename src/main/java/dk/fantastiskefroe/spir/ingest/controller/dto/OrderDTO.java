@@ -3,6 +3,7 @@ package dk.fantastiskefroe.spir.ingest.controller.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dk.fantastiskefroe.spir.ingest.entity.CancelReason;
 import dk.fantastiskefroe.spir.ingest.entity.FinancialStatus;
+import dk.fantastiskefroe.spir.ingest.entity.FulfillmentStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 

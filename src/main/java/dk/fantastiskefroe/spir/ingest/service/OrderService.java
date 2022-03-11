@@ -1,11 +1,13 @@
 package dk.fantastiskefroe.spir.ingest.service;
 
 import dk.fantastiskefroe.spir.ingest.dao.OrderDAO;
+import dk.fantastiskefroe.spir.ingest.entity.FulfillmentStatus;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class OrderService {
@@ -25,5 +27,9 @@ public class OrderService {
                 .forEach(orderLine -> orderDAO.createOrderLine(orderID, orderLine));
 
         return order.withID(orderID);
+    }
+
+    public List<Order> getOrdersByFulfillmentStatus(FulfillmentStatus fulfillmentStatus) {
+        return orderDAO.getByFulfillmentStatus(fulfillmentStatus);
     }
 }
