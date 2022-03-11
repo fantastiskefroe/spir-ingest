@@ -20,6 +20,8 @@ public record Order(
         @NonNull
         FinancialStatus financialStatus,
         @Nullable
+        FulfillmentStatus fulfillmentStatus,
+        @Nullable
         Double totalDiscount,
         @Nullable
         Double subtotalPrice,
@@ -35,6 +37,6 @@ public record Order(
         Instant createdDateTime) {
 
     public Order withID(long orderID) {
-        return new Order(orderID, name, number, status, cancelReason, financialStatus, totalDiscount, subtotalPrice, totalTax, totalPrice, totalShippingPrice, orderLines, createdDateTime);
+        return new Order(orderID, name, number, status, cancelReason, financialStatus, fulfillmentStatus, totalDiscount, subtotalPrice, totalTax, totalPrice, totalShippingPrice, orderLines, createdDateTime);
     }
 }
