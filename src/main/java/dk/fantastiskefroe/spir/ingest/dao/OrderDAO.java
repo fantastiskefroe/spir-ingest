@@ -84,4 +84,15 @@ public class OrderDAO {
 
         namedParameterJdbcTemplate.update(sql, mapSqlParameterSource);
     }
+
+    public List<Order> getByFulfillmentStatus(FulfillmentStatus fulfillmentStatus) {
+        final String sql = "SELECT * FROM \"order\" as o " +
+                "JOIN order_line as ol ON o.id = ol.order_id " +
+                "WHERE o.fulfillment_status = :fulfillmentStatus";
+
+        final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
+                .addValue("fulfillmentStatus", fulfillmentStatus, Types.VARCHAR);
+
+        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, new OrderResultSetExtractor());
+    }
 }
