@@ -2,9 +2,7 @@ package dk.fantastiskefroe.spir.ingest.controller.mapping;
 
 import dk.fantastiskefroe.spir.ingest.controller.dto.OrderDTO;
 import dk.fantastiskefroe.spir.ingest.controller.dto.OrderLineDTO;
-import dk.fantastiskefroe.spir.ingest.entity.Order;
-import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
-import dk.fantastiskefroe.spir.ingest.entity.OrderStatus;
+import dk.fantastiskefroe.spir.ingest.entity.*;
 
 import java.util.List;
 
@@ -18,6 +16,7 @@ public abstract class OrderMapper {
                 OrderStatus.OK,
                 source.cancelReason(),
                 source.financialStatus(),
+                source.fulfillmentStatus(),
                 source.totalDiscount(),
                 source.subtotalPrice(),
                 source.totalTax(),
