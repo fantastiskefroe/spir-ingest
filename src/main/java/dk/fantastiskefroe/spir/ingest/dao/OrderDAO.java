@@ -1,7 +1,9 @@
 package dk.fantastiskefroe.spir.ingest.dao;
 
-import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
+import dk.fantastiskefroe.spir.ingest.dao.mapping.OrderResultSetExtractor;
+import dk.fantastiskefroe.spir.ingest.entity.FulfillmentStatus;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
+import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Repository
@@ -37,10 +39,10 @@ public class OrderDAO {
 
     public long createOrder(Order order, Instant now) {
         final String sql = "INSERT INTO \"order\" " +
-                "(name, number, status, cancel_reason, financial_status, " +
+                "(name, number, status, cancel_reason, financial_status, fulfillment_status, " +
                 "total_discount, subtotal_price, total_tax, total_price, total_shipping_price, " +
                 "created_date_time, valid_from) VALUES " +
-                "(:name, :number, :status, :cancelReason, :financialStatus, " +
+                "(:name, :number, :status, :cancelReason, :financialStatus, :fulfillmentStatus, " +
                 ":totalDiscount, :subtotalPrice, :totalTax, :totalPrice, :totalShippingPrice, " +
                 ":createdDateTime, :validFrom)";
 
@@ -50,6 +52,7 @@ public class OrderDAO {
                 .addValue("status", order.status(), Types.VARCHAR)
                 .addValue("cancelReason", order.cancelReason(), Types.VARCHAR)
                 .addValue("financialStatus", order.financialStatus(), Types.VARCHAR)
+                .addValue("fulfillmentStatus", order.fulfillmentStatus(), Types.VARCHAR)
 
                 .addValue("totalDiscount", order.totalDiscount(), Types.DOUBLE)
                 .addValue("subtotalPrice", order.subtotalPrice(), Types.DOUBLE)
