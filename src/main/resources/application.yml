@@ -5,3 +5,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/database
     username: user
     password: password
+app:
+  hmac-private-key: testkey

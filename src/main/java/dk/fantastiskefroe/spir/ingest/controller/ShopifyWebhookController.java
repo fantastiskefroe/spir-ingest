@@ -6,11 +6,9 @@ import dk.fantastiskefroe.spir.ingest.entity.Order;
 import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
 import dk.fantastiskefroe.spir.ingest.service.OrderService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,9 +21,9 @@ public class ShopifyWebhookController {
         this.orderService = orderService;
     }
 
-    @PostMapping(value = "/order-created", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/order-created")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(@Valid @RequestBody OrderDTO orderDTO) {
+    public void createOrder(@RequestBody OrderDTO orderDTO) {
         final List<OrderLine> orderLineList = orderDTO.lineItems()
                 .stream()
                 .map(OrderMapper::toOrderLine)
