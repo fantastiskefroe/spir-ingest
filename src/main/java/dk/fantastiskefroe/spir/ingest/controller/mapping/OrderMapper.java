@@ -16,7 +16,7 @@ public abstract class OrderMapper {
                 OrderStatus.OK,
                 source.cancelReason(),
                 source.financialStatus(),
-                source.fulfillmentStatus(),
+                source.fulfillmentStatus() == null ? FulfillmentStatus.NULL : source.fulfillmentStatus(),
                 source.totalDiscount(),
                 source.subtotalPrice(),
                 source.totalTax(),

@@ -8,6 +8,8 @@ public enum FulfillmentStatus {
     FULFILLED,
     @JsonProperty("partial")
     PARTIAL,
+    @JsonProperty("null")
+    NULL,
     @JsonProperty("restocked")
     RESTOCKED
 }
