@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping
+@RequestMapping("/webhook")
 public class ShopifyWebhookController {
     private final OrderService orderService;
 
