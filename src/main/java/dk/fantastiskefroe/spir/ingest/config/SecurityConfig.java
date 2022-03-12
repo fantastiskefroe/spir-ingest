@@ -3,11 +3,14 @@ package dk.fantastiskefroe.spir.ingest.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ServerWebExchange;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -30,24 +33,21 @@ public class SecurityConfig {
         return http
                 .cors().disable()
                 .csrf().disable()
-                .addFilterAt((exchange, chain) -> {
-                    final CachingServerWebExchangeDecorator cachingServerWebExchangeDecorator = new CachingServerWebExchangeDecorator(exchange);
-                    final String hmac = cachingServerWebExchangeDecorator.getRequest().getHeaders().getFirst("X-Shopify-Hmac-Sha256");
-
-                    return cachingServerWebExchangeDecorator.getRequest()
+                .addFilterAt((exchange, chain) ->
+                        chain.filter(new CachingServerWebExchangeDecorator(exchange))
+                        , SecurityWebFiltersOrder.FIRST)
+                .authorizeExchange()
+                .pathMatchers("/webhook/**")
+                .access((authentication, context) -> {
+                    final String hmac = context.getExchange().getRequest().getHeaders().getFirst("X-Shopify-Hmac-Sha256");
+                    return context.getExchange().getRequest()
                             .getBody()
                             .map(SecurityConfig::databufferToString)
                             .collectList()
                             .map(l -> String.join("", l))
-                            .map(body -> {
-                                if (validateWebhook(body, hmac, hmacKey)) {
-                                    return cachingServerWebExchangeDecorator;
-                                }
-                                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-                            })
-                            .flatMap(chain::filter);
-                }, SecurityWebFiltersOrder.LAST)
-                .authorizeExchange().anyExchange().permitAll()
+                            .map(body -> new AuthorizationDecision(validateWebhook(body, hmac, hmacKey)));
+                })
+                .anyExchange().permitAll()
                 .and().build();
     }
 
