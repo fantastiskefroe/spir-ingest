@@ -27,6 +27,8 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout
@@ -40,4 +42,4 @@ jobs:
           cache: maven
 
       - name: Build and test
-        run: mvn -B --update-snapshots verify -DargLine="-Dspring.datasource.url=jdbc:postgresql://postgres:5432/database"
+        run: mvn -B --update-snapshots verify
