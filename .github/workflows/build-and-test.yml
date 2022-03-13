@@ -1,0 +1,45 @@
+name: Build and test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: spir-ingest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_DB: database
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt-hotspot
+          java-version: '17'
+          cache: maven
+
+      - name: Build and test
+        run: mvn -B --update-snapshots verify
