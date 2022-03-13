@@ -40,4 +40,4 @@ jobs:
           cache: maven
 
       - name: Build and test
-        run: mvn -B --update-snapshots verify
+        run: mvn -B --update-snapshots verify -DargLine="-Dspring.datasource.url=jdbc:postgresql://postgres:5432/database"
