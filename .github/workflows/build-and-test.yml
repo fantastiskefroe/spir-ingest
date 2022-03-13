@@ -18,7 +18,6 @@ jobs:
         image: postgres
         env:
           POSTGRES_PORT: 5432
-          POSTGRES_PASSWORD: password
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -30,5 +29,5 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Build and push
-        run: mvn -B --update-snapshots verify -DargLine="-Dspring.datasource.url=jdbc:postgresql://localhost:5432/database" -DargLine="-Dspring.datasource.username=root"
+      - name: Build and test
+        run: mvn -B --update-snapshots verify -DargLine="-Dspring.datasource.url=jdbc:postgresql://localhost:5432/database" -DargLine="-Dspring.datasource.username=postgres" -DargLine="-Dspring.datasource.password=postgres"
