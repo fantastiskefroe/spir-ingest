@@ -20,6 +20,7 @@ import java.util.Base64;
 public class SecurityConfig {
 
     private static final Base64.Encoder ENCODER = Base64.getEncoder();
+
     private final Mac mac;
 
     public SecurityConfig(ApplicationProperties applicationProperties) {
