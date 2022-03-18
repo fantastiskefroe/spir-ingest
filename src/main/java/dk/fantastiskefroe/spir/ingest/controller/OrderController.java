@@ -23,6 +23,12 @@ public class OrderController {
 
     @GetMapping(value = "/orders")
     public List<Order> getOrders(@RequestParam(required = false) FulfillmentStatus fulfillmentStatus) {
-        return orderService.getOrdersByFulfillmentStatus(fulfillmentStatus);
+        if(fulfillmentStatus != null) {
+            return orderService.getOrdersByFulfillmentStatus(fulfillmentStatus);
+        }
+        else {
+            return orderService.getOrders();
+        }
+
     }
 }
