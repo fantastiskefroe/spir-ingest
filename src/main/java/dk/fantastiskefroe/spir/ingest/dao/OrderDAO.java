@@ -95,4 +95,10 @@ public class OrderDAO {
 
         return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, new OrderResultSetExtractor());
     }
+
+    public List<Order> getAll() {
+        final String sql = "SELECT * FROM \"order\" as o " +
+                "JOIN order_line as ol ON o.id = ol.order_id";
+        return namedParameterJdbcTemplate.query(sql,new OrderResultSetExtractor());
+    }
 }
