@@ -30,10 +30,6 @@ public record OrderDTO(
         FulfillmentStatus fulfillmentStatus,
 
         @Nullable
-        @JsonProperty("fulfillment_status")
-        FulfillmentStatus fulfillmentStatus,
-
-        @Nullable
         @JsonProperty("total_discount")
         Double totalDiscount,
 

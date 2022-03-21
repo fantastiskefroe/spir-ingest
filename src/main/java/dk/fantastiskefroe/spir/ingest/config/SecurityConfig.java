@@ -36,12 +36,6 @@ public class SecurityConfig {
             throw new RuntimeException(e);
         }
     }
-    private final String hmacKey;
-
-    public SecurityConfig(ApplicationProperties applicationProperties) {
-        this.hmacKey = applicationProperties.getHmacPrivateKey();
-    }
-
 
     @Bean
     CorsWebFilter corsWebFilter() {
