@@ -25,6 +25,10 @@ public record OrderDTO(
         @JsonProperty("financial_status")
         FinancialStatus financialStatus,
 
+        @NonNull
+        @JsonProperty("fulfillment_status")
+        FulfillmentStatus fulfillmentStatus,
+
         @Nullable
         @JsonProperty("fulfillment_status")
         FulfillmentStatus fulfillmentStatus,
