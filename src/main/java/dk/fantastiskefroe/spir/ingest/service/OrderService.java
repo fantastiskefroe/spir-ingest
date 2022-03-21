@@ -32,4 +32,8 @@ public class OrderService {
     public List<Order> getOrdersByFulfillmentStatus(FulfillmentStatus fulfillmentStatus) {
         return orderDAO.getByFulfillmentStatus(fulfillmentStatus);
     }
+
+    public List<Order> getOrders() {
+        return orderDAO.getAll();
+    }
 }

@@ -8,12 +8,16 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Base64;
 
 @EnableWebFluxSecurity
@@ -32,15 +36,36 @@ public class SecurityConfig {
             throw new RuntimeException(e);
         }
     }
+    private final String hmacKey;
+
+    public SecurityConfig(ApplicationProperties applicationProperties) {
+        this.hmacKey = applicationProperties.getHmacPrivateKey();
+    }
+
+
+    @Bean
+    CorsWebFilter corsWebFilter() {
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://spir.fantastiskefroe.dk"));
+        corsConfig.setMaxAge(8000L);
+        corsConfig.addAllowedMethod("*");
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfig);
+
+        return new CorsWebFilter(source);
+    }
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         return http
                 .cors().disable()
                 .csrf().disable()
-                .addFilterAt(
-                        (exchange, chain) -> chain.filter(new CachingServerWebExchangeDecorator(exchange)),
-                        SecurityWebFiltersOrder.FIRST)
+
+                .addFilterAt((exchange, chain) ->
+                        chain.filter(new CachingServerWebExchangeDecorator(exchange))
+                        , SecurityWebFiltersOrder.FIRST)
                 .authorizeExchange()
                 .pathMatchers("/webhook/**")
                 .access((authentication, context) -> {
