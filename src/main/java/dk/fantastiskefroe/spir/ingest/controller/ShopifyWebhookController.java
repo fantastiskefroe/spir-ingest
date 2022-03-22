@@ -5,6 +5,7 @@ import dk.fantastiskefroe.spir.ingest.controller.mapping.OrderMapper;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
 import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
 import dk.fantastiskefroe.spir.ingest.service.OrderService;
+import dk.fantastiskefroe.spir.ingest.util.StringMapMessageWrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,9 @@ public class ShopifyWebhookController {
 
         final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
 
-        log.info("Order created:" + order.name());
+        log.info(new StringMapMessageWrapper()
+                .withNullable("event", "order created")
+                .withNullable("order name", order.name()));
 
         orderService.createOrder(order);
     }
@@ -51,7 +54,9 @@ public class ShopifyWebhookController {
 
         final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
 
-        log.info("Order created:" + order.name());
+        log.info(new StringMapMessageWrapper()
+                .withNullable("event", "order updated")
+                .withNullable("order name", order.name()));
 
         orderService.updateOrder(order);
     }
