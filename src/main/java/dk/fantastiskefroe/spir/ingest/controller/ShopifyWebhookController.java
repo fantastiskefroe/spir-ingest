@@ -5,6 +5,8 @@ import dk.fantastiskefroe.spir.ingest.controller.mapping.OrderMapper;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
 import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
 import dk.fantastiskefroe.spir.ingest.service.OrderService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,9 @@ import java.util.List;
 @Validated
 @RequestMapping("/webhook")
 public class ShopifyWebhookController {
+
+    private static final Logger log = LogManager.getLogger(ShopifyWebhookController.class);
+
     private final OrderService orderService;
 
     public ShopifyWebhookController(OrderService orderService) {
@@ -31,6 +36,8 @@ public class ShopifyWebhookController {
 
         final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
 
+        log.info("Order created:" + order.name());
+
         orderService.createOrder(order);
     }
 
@@ -43,6 +50,8 @@ public class ShopifyWebhookController {
                 .toList();
 
         final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
+
+        log.info("Order created:" + order.name());
 
         orderService.updateOrder(order);
     }
