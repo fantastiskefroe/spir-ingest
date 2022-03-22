@@ -88,7 +88,8 @@ public class OrderDAO {
     public List<Order> getByFulfillmentStatus(FulfillmentStatus fulfillmentStatus) {
         final String sql = "SELECT * FROM \"order\" as o " +
                 "JOIN order_line as ol ON o.id = ol.order_id " +
-                "WHERE o.fulfillment_status = :fulfillmentStatus";
+                "WHERE o.fulfillment_status = :fulfillmentStatus " +
+                "AND o.valid_to IS NULL";
 
         final MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource()
                 .addValue("fulfillmentStatus", fulfillmentStatus, Types.VARCHAR);
@@ -98,7 +99,8 @@ public class OrderDAO {
 
     public List<Order> getAll() {
         final String sql = "SELECT * FROM \"order\" as o " +
-                "JOIN order_line as ol ON o.id = ol.order_id";
+                "JOIN order_line as ol ON o.id = ol.order_id " +
+                "AND o.valid_to IS NULL";
         return namedParameterJdbcTemplate.query(sql,new OrderResultSetExtractor());
     }
 }
