@@ -1,6 +1,6 @@
 package dk.fantastiskefroe.spir.ingest.controller;
 
-import dk.fantastiskefroe.spir.ingest.controller.dto.OrderDTO;
+import dk.fantastiskefroe.spir.ingest.controller.dto.CreateOrderDTO;
 import dk.fantastiskefroe.spir.ingest.controller.mapping.OrderMapper;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
 import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
@@ -29,13 +29,13 @@ public class ShopifyWebhookController {
 
     @PostMapping("/order-created")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(@RequestBody OrderDTO orderDTO) {
-        final List<OrderLine> orderLineList = orderDTO.lineItems()
+    public void createOrder(@RequestBody CreateOrderDTO createOrderDTO) {
+        final List<OrderLine> orderLineList = createOrderDTO.lineItems()
                 .stream()
                 .map(OrderMapper::toOrderLine)
                 .toList();
 
-        final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
+        final Order order = OrderMapper.toOrder(createOrderDTO, orderLineList);
 
         log.info(new StringMapMessageWrapper()
                 .withNullable("event", "order created")
@@ -46,13 +46,13 @@ public class ShopifyWebhookController {
 
     @PostMapping("/order-updated")
     @ResponseStatus(HttpStatus.OK)
-    public void updateOrder(@RequestBody OrderDTO orderDTO) {
-        final List<OrderLine> orderLineList = orderDTO.lineItems()
+    public void updateOrder(@RequestBody CreateOrderDTO createOrderDTO) {
+        final List<OrderLine> orderLineList = createOrderDTO.lineItems()
                 .stream()
                 .map(OrderMapper::toOrderLine)
                 .toList();
 
-        final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
+        final Order order = OrderMapper.toOrder(createOrderDTO, orderLineList);
 
         log.info(new StringMapMessageWrapper()
                 .withNullable("event", "order updated")

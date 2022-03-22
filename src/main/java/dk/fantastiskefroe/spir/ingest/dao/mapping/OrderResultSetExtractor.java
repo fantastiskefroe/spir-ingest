@@ -4,8 +4,6 @@ import dk.fantastiskefroe.spir.ingest.entity.*;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-import javax.sound.sampled.Line;
-import javax.swing.text.html.Option;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -34,13 +32,13 @@ public class OrderResultSetExtractor implements ResultSetExtractor<List<Order>> 
                         OrderStatus.OK,
                         Optional.ofNullable(rs.getString("cancel_reason")).map(CancelReason::valueOf).orElse(null),
                         FinancialStatus.valueOf(rs.getString("financial_status")),
-                        Optional.ofNullable(rs.getString("fulfillment_status")).map(FulfillmentStatus::valueOf).orElse(null),
+                        FulfillmentStatus.valueOf(rs.getString("fulfillment_status")),
                         rs.getDouble("total_discount"),
                         rs.getDouble("subtotal_price"),
                         rs.getDouble("total_tax"),
                         rs.getDouble("total_price"),
                         rs.getDouble("total_shipping_price"),
-                        new ArrayList<OrderLine>(),
+                        new ArrayList<>(),
                         rs.getTimestamp("created_date_time").toInstant()
                 );
             } catch (SQLException e) {
