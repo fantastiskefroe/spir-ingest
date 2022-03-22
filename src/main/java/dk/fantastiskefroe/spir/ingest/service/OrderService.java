@@ -42,7 +42,7 @@ public class OrderService {
         return orderDAO.getByFulfillmentStatus(fulfillmentStatus);
     }
 
-    public List<Order> getOrders() {
+    public List<Order> getAllOrders() {
         return orderDAO.getAll();
     }
 }

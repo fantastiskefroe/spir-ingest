@@ -1,60 +1,56 @@
 package dk.fantastiskefroe.spir.ingest.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import dk.fantastiskefroe.spir.ingest.entity.CancelReason;
 import dk.fantastiskefroe.spir.ingest.entity.FinancialStatus;
 import dk.fantastiskefroe.spir.ingest.entity.FulfillmentStatus;
+import dk.fantastiskefroe.spir.ingest.entity.OrderStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public record OrderDTO(
+        @Nullable
+        Long id,
+
         @NonNull
         String name,
 
         @NonNull
         Integer number,
 
+        @NonNull
+        OrderStatus status,
+
         @Nullable
-        @JsonProperty("cancel_reason")
         CancelReason cancelReason,
 
         @NonNull
-        @JsonProperty("financial_status")
         FinancialStatus financialStatus,
 
-        @NonNull
-        @JsonProperty("fulfillment_status")
+        @Nullable
         FulfillmentStatus fulfillmentStatus,
 
         @Nullable
-        @JsonProperty("total_discount")
         Double totalDiscount,
 
         @Nullable
-        @JsonProperty("subtotal_price")
         Double subtotalPrice,
 
         @Nullable
-        @JsonProperty("total_tax")
         Double totalTax,
 
         @Nullable
-        @JsonProperty("total_price")
         Double totalPrice,
 
         @Nullable
-        @JsonProperty("total_shipping_price")
         Double totalShippingPrice,
 
         @NonNull
-        @JsonProperty("line_items")
-        List<OrderLineDTO> lineItems,
+        List<OrderLineDTO> orderLines,
 
         @NonNull
-        @JsonProperty("created_at")
-        Instant createdAt
+        OffsetDateTime createdDateTime
 ) {
 }

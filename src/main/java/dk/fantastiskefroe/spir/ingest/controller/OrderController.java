@@ -1,5 +1,9 @@
 package dk.fantastiskefroe.spir.ingest.controller;
 
+import dk.fantastiskefroe.spir.ingest.controller.dto.OrderDTO;
+import dk.fantastiskefroe.spir.ingest.controller.dto.OrderDTOList;
+import dk.fantastiskefroe.spir.ingest.controller.dto.OrderLineDTO;
+import dk.fantastiskefroe.spir.ingest.controller.mapping.OrderMapper;
 import dk.fantastiskefroe.spir.ingest.entity.FulfillmentStatus;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
 import dk.fantastiskefroe.spir.ingest.service.OrderService;
@@ -22,12 +26,25 @@ public class OrderController {
     }
 
     @GetMapping(value = "/orders")
-    public List<Order> getOrders(@RequestParam(required = false) FulfillmentStatus fulfillmentStatus) {
+    public OrderDTOList getOrders(@RequestParam(required = false) FulfillmentStatus fulfillmentStatus) {
+        final List<Order> orderList;
         if (fulfillmentStatus != null) {
-            return orderService.getOrdersByFulfillmentStatus(fulfillmentStatus);
+            orderList = orderService.getOrdersByFulfillmentStatus(fulfillmentStatus);
         } else {
-            return orderService.getOrders();
+            orderList = orderService.getAllOrders();
         }
 
+        List<OrderDTO> orderDTOList = orderList
+                .stream()
+                .map(order -> {
+                    final List<OrderLineDTO> orderLineDTOList = order.orderLines()
+                            .stream()
+                            .map(OrderMapper::toOrderLineDTO)
+                            .toList();
+                    return OrderMapper.toOrderDTO(order, orderLineDTOList);
+                })
+                .toList();
+
+        return new OrderDTOList(orderDTOList);
     }
 }
