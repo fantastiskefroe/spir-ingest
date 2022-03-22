@@ -33,4 +33,17 @@ public class ShopifyWebhookController {
 
         orderService.createOrder(order);
     }
+
+    @PostMapping("/order-updated")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateOrder(@RequestBody OrderDTO orderDTO) {
+        final List<OrderLine> orderLineList = orderDTO.lineItems()
+                .stream()
+                .map(OrderMapper::toOrderLine)
+                .toList();
+
+        final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
+
+        orderService.updateOrder(order);
+    }
 }
