@@ -29,7 +29,7 @@ public record OrderDTO(
         @NonNull
         FinancialStatus financialStatus,
 
-        @Nullable
+        @NonNull
         FulfillmentStatus fulfillmentStatus,
 
         @Nullable

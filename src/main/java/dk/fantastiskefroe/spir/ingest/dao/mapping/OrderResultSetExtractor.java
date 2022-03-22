@@ -32,13 +32,13 @@ public class OrderResultSetExtractor implements ResultSetExtractor<List<Order>> 
                         OrderStatus.OK,
                         Optional.ofNullable(rs.getString("cancel_reason")).map(CancelReason::valueOf).orElse(null),
                         FinancialStatus.valueOf(rs.getString("financial_status")),
-                        Optional.ofNullable(rs.getString("fulfillment_status")).map(FulfillmentStatus::valueOf).orElse(FulfillmentStatus.NULL),
+                        FulfillmentStatus.valueOf(rs.getString("fulfillment_status")),
                         rs.getDouble("total_discount"),
                         rs.getDouble("subtotal_price"),
                         rs.getDouble("total_tax"),
                         rs.getDouble("total_price"),
                         rs.getDouble("total_shipping_price"),
-                        new ArrayList<OrderLine>(),
+                        new ArrayList<>(),
                         rs.getTimestamp("created_date_time").toInstant()
                 );
             } catch (SQLException e) {

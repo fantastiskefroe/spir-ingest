@@ -19,7 +19,7 @@ public record Order(
         CancelReason cancelReason,
         @NonNull
         FinancialStatus financialStatus,
-        @Nullable
+        @NonNull
         FulfillmentStatus fulfillmentStatus,
         @Nullable
         Double totalDiscount,
