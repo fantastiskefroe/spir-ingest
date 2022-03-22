@@ -17,8 +17,8 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 @EnableWebFluxSecurity
 public class SecurityConfig {
@@ -40,7 +40,7 @@ public class SecurityConfig {
     @Bean
     CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://spir.fantastiskefroe.dk"));
+        corsConfig.setAllowedOrigins(List.of("http://localhost:8080", "https://spir.fantastiskefroe.dk"));
         corsConfig.setMaxAge(8000L);
         corsConfig.addAllowedMethod("*");
 

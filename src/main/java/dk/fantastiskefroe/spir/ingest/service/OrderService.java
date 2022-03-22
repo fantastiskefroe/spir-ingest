@@ -19,6 +19,15 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(Order order) {
+        return createOrUpdateOrder(order);
+    }
+
+    @Transactional
+    public Order updateOrder(Order order) {
+        return createOrUpdateOrder(order);
+    }
+
+    private Order createOrUpdateOrder(Order order) {
         final Instant now = Instant.now();
         orderDAO.invalidateExistingOrderByName(order.name(), now);
 

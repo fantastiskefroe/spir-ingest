@@ -5,6 +5,9 @@ import dk.fantastiskefroe.spir.ingest.controller.mapping.OrderMapper;
 import dk.fantastiskefroe.spir.ingest.entity.Order;
 import dk.fantastiskefroe.spir.ingest.entity.OrderLine;
 import dk.fantastiskefroe.spir.ingest.service.OrderService;
+import dk.fantastiskefroe.spir.ingest.util.StringMapMessageWrapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,9 @@ import java.util.List;
 @Validated
 @RequestMapping("/webhook")
 public class ShopifyWebhookController {
+
+    private static final Logger log = LogManager.getLogger(ShopifyWebhookController.class);
+
     private final OrderService orderService;
 
     public ShopifyWebhookController(OrderService orderService) {
@@ -31,6 +37,27 @@ public class ShopifyWebhookController {
 
         final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
 
+        log.info(new StringMapMessageWrapper()
+                .withNullable("event", "order created")
+                .withNullable("order name", order.name()));
+
         orderService.createOrder(order);
+    }
+
+    @PostMapping("/order-updated")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateOrder(@RequestBody OrderDTO orderDTO) {
+        final List<OrderLine> orderLineList = orderDTO.lineItems()
+                .stream()
+                .map(OrderMapper::toOrderLine)
+                .toList();
+
+        final Order order = OrderMapper.toOrder(orderDTO, orderLineList);
+
+        log.info(new StringMapMessageWrapper()
+                .withNullable("event", "order updated")
+                .withNullable("order name", order.name()));
+
+        orderService.updateOrder(order);
     }
 }
