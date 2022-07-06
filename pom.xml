@@ -102,9 +102,6 @@
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>3.2.1</version>
                 <configuration>
-                    <from>
-                        <image>open-17-jre</image>
-                    </from>
                     <to>
                         <image>ghcr.io/fantastiskefroe/spir-ingest</image>
                     </to>
