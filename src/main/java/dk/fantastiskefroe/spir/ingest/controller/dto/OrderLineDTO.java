@@ -10,7 +10,6 @@ public record OrderLineDTO(
         @NonNull
         String title,
 
-        @NonNull
         String variantTitle,
 
         @NonNull

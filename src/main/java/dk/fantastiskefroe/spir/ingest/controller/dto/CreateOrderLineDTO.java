@@ -11,7 +11,6 @@ public record CreateOrderLineDTO(
         @NonNull
         String title,
 
-        @NonNull
         @JsonProperty("variant_title")
         String variantTitle,
 
