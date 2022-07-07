@@ -19,7 +19,6 @@
         <version.number>${git.commit.time}.${git.commit.id.abbrev}</version.number>
 
         <git-commit-id-maven-plugin.version>5.0.0</git-commit-id-maven-plugin.version>
-
     </properties>
     <dependencies>
         <dependency>
@@ -111,6 +110,7 @@
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
                     </generateGitPropertiesFilename>
+                    <dateFormat>yyyy-MM-dd't'HH:mm:ssZ</dateFormat>
                     <dateFormatTimeZone>Europe/Copenhagen</dateFormatTimeZone>
                     <includeOnlyProperties>
                         <includeOnlyProperty>git.commit.time</includeOnlyProperty>
