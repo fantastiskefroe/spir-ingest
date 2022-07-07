@@ -39,7 +39,11 @@ public class ShopifyWebhookController {
 
         log.info(new StringMapMessageWrapper()
                 .withNullable("event", "order created")
-                .withNullable("order name", order.name()));
+                .withNullable("order name", order.name())
+                .withNullable("order lines", order.orderLines().size())
+                .withNullable("cancel", order.cancelReason())
+                .withNullable("financial", order.financialStatus())
+                .withNullable("fulfillment", order.fulfillmentStatus()));
 
         orderService.createOrder(order);
     }
@@ -56,7 +60,11 @@ public class ShopifyWebhookController {
 
         log.info(new StringMapMessageWrapper()
                 .withNullable("event", "order updated")
-                .withNullable("order name", order.name()));
+                .withNullable("order name", order.name())
+                .withNullable("order lines", order.orderLines().size())
+                .withNullable("cancel", order.cancelReason())
+                .withNullable("financial", order.financialStatus())
+                .withNullable("fulfillment", order.fulfillmentStatus()));
 
         orderService.updateOrder(order);
     }
